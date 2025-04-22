@@ -1,0 +1,129 @@
+leads:
+  - company: Berry Global
+    conversations:
+      - date: "2025-04-15"
+        message:
+          Hi Sarah, I noticed your recent expansion into eco-friendly packaging
+          solutions. Our AI platform has helped similar companies optimize their sales
+          pipeline. Would you be interested in a brief discussion about your current lead
+          generation challenges?
+    stage: Contacted
+    visible: true
+  - company: Sealed Air Corporation
+    conversations:
+      - date: "2025-04-14"
+        message:
+          Hello Michael, I came across your company's innovative protective packaging
+          solutions. We've helped similar manufacturing companies increase their qualified
+          leads by 40%. Would you be open to a quick chat about your sales goals?
+      - date: "2025-04-16"
+        message:
+          Thanks for your interest! We're currently focusing on companies with
+          annual revenue above $100M. Would you like to explore how we could help scale
+          your sales process?
+    stage: Meeting Proposed
+    visible: true
+  - company: Sonoco Products
+    conversations:
+      - date: "2025-04-17"
+        message:
+          Hi Jennifer, I saw your company's commitment to sustainable packaging
+          solutions. Our AI platform has helped similar companies reduce their sales cycle
+          by 20%. Would you be interested in learning more about our approach?
+    stage: Contacted
+    visible: true
+  - company: WestRock Company
+    conversations:
+      - date: "2025-04-18"
+        message:
+          Hi David, I noticed your company's impressive growth in sustainable packaging.
+          Our AI platform has helped similar companies increase their sales pipeline efficiency
+          by 35%. Would you be interested in a brief discussion?
+      - date: "2025-04-19"
+        message:
+          Thanks for your response! Could you tell me more about your current lead
+          generation process?
+      - date: "2025-04-20"
+        message:
+          That's helpful context. Based on what you've shared, I think we could
+          help optimize your outreach strategy. Would you like to see some specific examples
+          of how we've helped similar companies?
+    stage: In-conversation
+    visible: true
+  - company: DS Smith
+    conversations:
+      - date: "2025-04-24"
+        message:
+          Hello Emma, I noticed your company's focus on circular economy solutions.
+          Our AI platform has helped similar companies improve their lead qualification
+          process. Would you be interested in learning more?
+      - date: "2025-04-25"
+        message:
+          Thanks for your response! Could you share more about your current sales
+          challenges?
+      - date: "2025-04-26"
+        message:
+          Based on what you've shared, I think we could help optimize your sales
+          process. Would you like to see some case studies?
+      - date: "2025-04-27"
+        message:
+          Great! I'll send over some case studies and we can schedule a follow-up
+          call next week.
+    stage: In-conversation
+    visible: false
+  - company: Tetra Pak
+    conversations:
+      - date: "2025-04-28"
+        message:
+          Hi James, I noticed your company's leadership in food packaging solutions.
+          Our AI platform has helped similar companies increase their sales efficiency
+          by 45%. Would you be interested in a brief discussion?
+      - date: "2025-04-29"
+        message:
+          Thanks for your interest! I'd love to show you how our platform could
+          help optimize your sales process. Would you be available for a demo next Thursday?
+    stage: Meeting Proposed
+    visible: true
+  - company: Ball Corporation
+    conversations:
+      - date: "2025-04-30"
+        message:
+          Hello Lisa, I came across your company's innovative metal packaging solutions.
+          Our AI platform has helped similar companies improve their lead conversion rates.
+          Would you be open to a quick chat?
+    stage: Contacted
+    visible: true
+  - company: Crown Holdings
+    conversations:
+      - date: "2025-05-01"
+        message:
+          Hi Robert, I noticed your company's impressive portfolio of metal packaging
+          solutions. Our AI platform has helped similar companies streamline their sales
+          process. Would you be interested in learning more?
+      - date: "2025-05-02"
+        message:
+          Thanks for your response! Could you tell me more about your current sales
+          challenges?
+      - date: "2025-05-03"
+        message:
+          That's helpful context. I think we could help optimize your outreach
+          strategy. Would you like to see some specific examples?
+      - date: "2025-05-04"
+        message:
+          Great! I'll send over some case studies and we can schedule a follow-up
+          call next week.
+    stage: In-conversation
+    visible: true
+  - company: AptarGroup
+    conversations:
+      - date: "2025-05-05"
+        message:
+          Hello Maria, I noticed your company's focus on dispensing solutions.
+          Our AI platform has helped similar companies increase their sales pipeline efficiency.
+          Would you be interested in a brief discussion?
+      - date: "2025-05-06"
+        message:
+          Thanks for your interest! I'd love to schedule a demo to show you how
+          our platform works. Would next Monday work for you?
+    stage: Meeting Proposed
+    visible: true
