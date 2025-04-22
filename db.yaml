@@ -50,27 +50,6 @@ leads:
           of how we've helped similar companies?
     stage: In-conversation
     visible: true
-  - company: DS Smith
-    conversations:
-      - date: "2025-04-24"
-        message:
-          Hello Emma, I noticed your company's focus on circular economy solutions.
-          Our AI platform has helped similar companies improve their lead qualification
-          process. Would you be interested in learning more?
-      - date: "2025-04-25"
-        message:
-          Thanks for your response! Could you share more about your current sales
-          challenges?
-      - date: "2025-04-26"
-        message:
-          Based on what you've shared, I think we could help optimize your sales
-          process. Would you like to see some case studies?
-      - date: "2025-04-27"
-        message:
-          Great! I'll send over some case studies and we can schedule a follow-up
-          call next week.
-    stage: In-conversation
-    visible: false
   - company: Tetra Pak
     conversations:
       - date: "2025-04-28"
