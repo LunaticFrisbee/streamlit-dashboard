@@ -12,23 +12,33 @@ def load_data():
     if os.path.exists("db.yaml"):
         with open("db.yaml", "r") as file:
             data = yaml.safe_load(file)
-            # Filter out invisible leads
-            data["leads"] = [lead for lead in data["leads"] if lead.get("visible", True)]
+            # Ensure all leads have a visible field and filter invisible ones
+            visible_leads = []
+            for lead in data.get("leads", []):
+                if "visible" not in lead:
+                    lead["visible"] = True
+                if lead.get("visible", True):
+                    visible_leads.append(lead)
+            data["leads"] = visible_leads
             return data
     return {"leads": []}
 
 # Function to save data to YAML file
 def save_data(data):
+    # Ensure all leads have a visible field before saving
+    for lead in data.get("leads", []):
+        if "visible" not in lead:
+            lead["visible"] = True
     with open("db.yaml", "w") as file:
         yaml.dump(data, file)
 
 # Custom CSS with explicit text color settings
 st.markdown("""
 <style>
-    /* Base text color enforcement */
-    * {
-        color: black;
-    }
+    # /* Base text color enforcement */
+    # * {
+    #     color: black;
+    # }
     
     .title {
         font-size: 36px;
@@ -73,58 +83,58 @@ st.markdown("""
     .stat-label {
         font-size: 18px;
         margin-bottom: 5px;
-        color: black !important;
+        color: black;
     }
     
     .stat-value {
         font-size: 28px;
         font-weight: bold;
-        color: black !important;
+        color: black;
     }
     
     .status-draftready {
         background-color: #A0A0A0;
-        color: black !important;
+        color: black;
     }
     
     .status-contacted {
         background-color: #3498DB;
-        color: black !important;
+        color: black;
     }
     
     .status-inconversation {
         background-color: #5DADE2;
-        color: black !important;
+        color: black;
     }
     
     .status-leadidentified {
         background-color: #9B59B6;
-        color: black !important;
+        color: black;
     }
     
     .status-notfit {
         background-color: #E74C3C;
-        color: black !important;
+        color: black;
     }
     
     .status-qualifiedlead {
         background-color: #1ABC9C;
-        color: black !important;
+        color: black;
     }
     
     .status-handedtohuman {
         background-color: #E67E22;
-        color: black !important;
+        color: black;
     }
     
     .status-meetingproposed {
         background-color: #F1C40F;
-        color: black !important;
+        color: black;
     }
     
     .status-meetingbooked {
         background-color: #2ECC71;
-        color: black !important;
+        color: black;
     }
     
     .conversation-expanded {
@@ -132,74 +142,101 @@ st.markdown("""
         background-color: #f9f9f9;
         border-radius: 5px;
         margin: 5px 0;
-        color: black !important;
+        color: black;
     }
     
     .conversation-expanded p {
-        color: black !important;
+        color: black;
     }
     
     .conversation-expanded b {
-        color: black !important;
+        color: black;
     }
     
     /* Stage styling - force black text */
     .stage-indicator {
         padding: 5px;
         border-radius: 3px;
-        color: black !important;
+        color: black;
     }
     
     .stage-indicator b {
-        color: black !important;
+        color: black;
     }
     
     .stage-indicator span {
         color: black !important;
     }
     
-    /* Force expander label text to be black */
-    .streamlit-expanderHeader p {
+    p, 
+    span,
+    label {
+        color: black !important;
+    }
+    
+    /* Even more forceful override for the expander header text */
+    [data-testid="stExpander"] [data-testid="stExpanderToggleIcon"] + div {
+    color: black !important;
+}
+    /* Target Streamlit expander headers more precisely */
+    [data-testid="stExpander"] > div:first-child, 
+    [data-testid="stExpander"] > div:first-child p,
+    [data-testid="stExpander"] > div:first-child span,
+    .stExpander label, 
+    .stExpander div p,
+    div[role="button"] p {
+        color: black !important;
+    }
+
+    /* Force all text in expanders to be black */
+    [data-testid="stExpander"] {
+        color: black !important;
+    }
+
+    /* Direct targeting of expander header text */
+    button[kind="secondary"] p,
+    .stExpanderToggleIcon + div,
+    .stExpanderToggleIcon ~ div p {
         color: black !important;
     }
     
     /* Header text color override */
     .header-text {
-        color: black !important;
+        color: black;
         font-weight: bold;
     }
     
     /* Delete button styling */
     .stButton > button {
-        background-color: #D3D3D3 !important;
-        color: black !important;
+        background-color: #D3D3D3;
+        color: black;
     }
     
     /* Date and message labels */
     .date-label, .message-label {
-        color: black !important;
+        color: black;
         font-weight: bold;
     }
     
     /* Message content */
     .message-content {
-        color: black !important;
+        color: black;
     }
     
     /* Stage text */
     .stage-text {
-        color: black !important;
+        color: black;
         font-weight: bold;
     }
     
     /* Stage value */
     .stage-value {
-        color: black !important;
+        color: black;
     }
     
     /* Override for the white text in status labels */
     div[class*="status-"] * {
-        color: black !important;
+        color: black;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -261,8 +298,8 @@ with table_container:
     
     # Display data rows
     for i, lead in enumerate(data["leads"]):
-        # Create a unique key for each lead
-        lead_key = f"lead_{i}"
+        # Create a unique key based on company name
+        lead_key = f"lead_{lead['company']}"
         
         # Create columns for each row
         row_cols = st.columns([3, 6, 3, 2, 1])
@@ -313,6 +350,14 @@ with table_container:
         
         # Delete button
         if row_cols[4].button("Delete", key=f"delete_{lead_key}"):
-            data["leads"][i]["visible"] = False
-            save_data(data)
+            # Reload the full data to ensure we have all leads
+            full_data = yaml.safe_load(open("db.yaml", "r"))
+            # Update the specific lead's visibility
+            for idx, l in enumerate(full_data["leads"]):
+                if l["company"] == lead["company"]:
+                    full_data["leads"][idx]["visible"] = False
+                    break
+            # Save the updated data
+            with open("db.yaml", "w") as file:
+                yaml.dump(full_data, file)
             st.rerun()

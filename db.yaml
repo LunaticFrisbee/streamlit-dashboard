@@ -32,6 +32,19 @@ leads:
           by 20%. Would you be interested in learning more about our approach?
     stage: Contacted
     visible: true
+  - company: AptarGroup
+    conversations:
+      - date: "2025-05-05"
+        message:
+          Hello Maria, I noticed your company's focus on dispensing solutions.
+          Our AI platform has helped similar companies increase their sales pipeline efficiency.
+          Would you be interested in a brief discussion?
+      - date: "2025-05-06"
+        message:
+          Thanks for your interest! I'd love to schedule a demo to show you how
+          our platform works. Would next Monday work for you?
+    stage: Meeting Proposed
+    visible: true
   - company: WestRock Company
     conversations:
       - date: "2025-04-18"
@@ -92,17 +105,4 @@ leads:
           Great! I'll send over some case studies and we can schedule a follow-up
           call next week.
     stage: In-conversation
-    visible: true
-  - company: AptarGroup
-    conversations:
-      - date: "2025-05-05"
-        message:
-          Hello Maria, I noticed your company's focus on dispensing solutions.
-          Our AI platform has helped similar companies increase their sales pipeline efficiency.
-          Would you be interested in a brief discussion?
-      - date: "2025-05-06"
-        message:
-          Thanks for your interest! I'd love to schedule a demo to show you how
-          our platform works. Would next Monday work for you?
-    stage: Meeting Proposed
     visible: true
