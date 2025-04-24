@@ -253,14 +253,31 @@ st.markdown("""
 # Load data
 data = load_data()
 
-# Display title
-st.markdown('<div class="title">AI Sales Agent Dashboard</div>', unsafe_allow_html=True)
+# ─── Stateful toggle for "show_filter" ────────────────────────────────────────
+# ─── Build dropdown options ──────────────────────────────────────────────────
+status_options = [
+    "All connections",
+    "Draft Ready",
+    "Contacted",
+    "In-conversation",
+    "Lead Identified",
+    "Not fit Lead",
+    "Qualified Lead",
+    "Handed to Human",
+    "Meeting Proposed",
+    "Meeting Booked",
+]
+
+# ─── HEADER ROW: Title + Icon Button ────────────────────────────────────────
+# ─── CONDITIONAL DROPDOWN ────────────────────────────────────────────────────
+# ─── FILTER LEADS ────────────────────────────────────────────────────────
+# ─── ADD THIS: Sort control ────────────────────────────────────────────────────
 
 # Calculate statistics
 total_leads = len(data["leads"])
 contacted = sum(1 for lead in data["leads"] if lead["stage"] == "Contacted")
 in_conversation = sum(1 for lead in data["leads"] if lead["stage"] == "In-conversation")
-booked_calls = sum(1 for lead in data["leads"] if lead["stage"] == "Meeting Proposed" or lead["stage"] == "Booked Call")
+booked_calls = sum(1 for lead in data["leads"] if lead["stage"] in ("Meeting Proposed","Meeting Booked"))
 
 # Display statistics
 st.markdown(f"""
@@ -288,22 +305,84 @@ st.markdown(f"""
 table_container = st.container()
 
 with table_container:
-    # Create columns for the table header
-    cols = st.columns([3, 6, 3, 2, 1])
-    cols[0].markdown("<span class='header-text'>Company</span>", unsafe_allow_html=True)
-    cols[1].markdown("<span class='header-text'>Conversation Snippet</span>", unsafe_allow_html=True)
-    cols[2].markdown("<span class='header-text'>Stage</span>", unsafe_allow_html=True)
-    cols[3].markdown("<span class='header-text'>Last Updated</span>", unsafe_allow_html=True)
-    cols[4].markdown("", unsafe_allow_html=True)
-    
-    # Display data rows
-    for i, lead in enumerate(data["leads"]):
-        # Create a unique key based on company name
-        lead_key = f"lead_{lead['company']}"
-        
-        # Create columns for each row
+    # ─── Inline filters next to table headings ────────────────────────────────────
+
+    # 1) Initialize toggles in session_state
+    if "show_stage_filter" not in st.session_state:
+        st.session_state.show_stage_filter = False
+    if "show_date_sort" not in st.session_state:
+        st.session_state.show_date_sort = False
+
+    # 2) Table HEADER with embedded filter/sort icons
+    header_cols = st.columns([3, 6, 3, 2, 1])
+    header_cols[0].markdown("<span class='header-text'>Company</span>", unsafe_allow_html=True)
+    header_cols[1].markdown("<span class='header-text'>Conversation Snippet</span>", unsafe_allow_html=True)
+
+    # ─ Stage ─────────────────────────────────────────────────────────────────────
+    with header_cols[2]:
+        ic, tc = st.columns([1, 9])
+        if ic.button("🔽", key="toggle_stage_filter"):
+            st.session_state.show_stage_filter = not st.session_state.show_stage_filter
+        tc.markdown("<span class='header-text'>Stage</span>", unsafe_allow_html=True)
+
+    # ─ Last Updated ──────────────────────────────────────────────────────────────
+    with header_cols[3]:
+        ic, tc = st.columns([1, 9])
+        if ic.button("🔽", key="toggle_date_sort"):
+            st.session_state.show_date_sort = not st.session_state.show_date_sort
+        tc.markdown("<span class='header-text'>Last Updated</span>", unsafe_allow_html=True)
+
+    # ─ Delete (blank) ────────────────────────────────────────────────────────────
+    header_cols[4].markdown("", unsafe_allow_html=True)
+
+    # 3) INLINE FILTER ROW (conditionally shown under the header)
+    # 3a) Status filter dropdown
+    if st.session_state.show_stage_filter:
+        filter_cols = st.columns([3, 6, 3, 2, 1])
+        with filter_cols[2]:
+            st.selectbox(
+                "",                        # no label
+                options=status_options, 
+                key="status_filter_key"
+            )
+
+    # 3b) Date sort dropdown
+    if st.session_state.show_date_sort:
+        sort_cols = st.columns([3, 6, 3, 2, 1])
+        with sort_cols[3]:
+            st.selectbox(
+                "", 
+                options=["Latest first", "Earliest first"], 
+                key="date_sort_key"
+            )
+
+    # 4) APPLY FILTERS & SORTING
+    # 4a) Stage / status filter
+    sel_status = st.session_state.get("status_filter_key", "All connections")
+    if sel_status == "All connections":
+        stage_filtered = data["leads"]
+    else:
+        stage_filtered = [
+            lead for lead in data["leads"]
+            if lead["stage"] == sel_status
+        ]
+
+    # 4b) Date sorting
+    sort_pref = st.session_state.get("date_sort_key", "Latest first")
+    def get_last_date(lead):
+        if not lead["conversations"]:
+            return ""
+        return max(c["date"] for c in lead["conversations"])
+
+    leads_sorted = sorted(
+        stage_filtered,
+        key=lambda ld: get_last_date(ld),
+        reverse=(sort_pref == "Latest first")
+    )
+
+    # 5) RENDER ROWS using `leads_sorted`
+    for i, lead in enumerate(leads_sorted):
         row_cols = st.columns([3, 6, 3, 2, 1])
-        
         # Company name
         row_cols[0].markdown(f"<span class='header-text'>{lead['company']}</span>", unsafe_allow_html=True)
         
@@ -311,7 +390,7 @@ with table_container:
         with row_cols[1].expander(lead["conversations"][-1]["message"][:100] + "..." if len(lead["conversations"][-1]["message"]) > 100 else lead["conversations"][-1]["message"], expanded=False):
             for convo in lead["conversations"]:
                 st.markdown(f"""
-                <div class="conversation-expanded">
+                <div class="conversation-expanded" style="border: 1px solid #e0e0e0; margin: 5px 0; padding: 10px; border-radius: 5px;">
                     <p><span class="date-label">Date:</span> <span class="message-content">{convo['date']}</span></p>
                     <p><span class="message-label">Message:</span> <span class="message-content">{convo['message']}</span></p>
                 </div>
@@ -349,7 +428,7 @@ with table_container:
         row_cols[3].markdown(f"<span class='date-label'>{latest_date}</span>", unsafe_allow_html=True)
         
         # Delete button
-        if row_cols[4].button("Delete", key=f"delete_{lead_key}"):
+        if row_cols[4].button("Delete", key=f"delete_{lead['company']}"):
             # Reload the full data to ensure we have all leads
             full_data = yaml.safe_load(open("db.yaml", "r"))
             # Update the specific lead's visibility
