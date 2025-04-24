@@ -7,6 +7,22 @@ from datetime import datetime
 # Set page configuration
 st.set_page_config(page_title="AI Sales Agent Dashboard", layout="wide", initial_sidebar_state="expanded")
 
+# ─── At the very top of your file, inject a tiny CSS tweak to shrink only the toggle buttons ───
+st.markdown(
+    """
+    <style>
+      /* Shrink all st.buttons slightly (affects toggle‐icons & delete buttons) */
+      .stButton > button {
+        font-size: 14px !important;
+        min-width: 24px !important;
+        height: 24px    !important;
+        padding: 0 4px  !important;
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # Function to load data from YAML file
 def load_data():
     if os.path.exists("db.yaml"):
@@ -318,19 +334,21 @@ with table_container:
     header_cols[0].markdown("<span class='header-text'>Company</span>", unsafe_allow_html=True)
     header_cols[1].markdown("<span class='header-text'>Conversation Snippet</span>", unsafe_allow_html=True)
 
-    # ─ Stage ─────────────────────────────────────────────────────────────────────
+    # ─── Stage Header + Toggle Icon on the RIGHT ────────────────────────────────────────────
     with header_cols[2]:
-        ic, tc = st.columns([1, 9])
-        if ic.button("🔽", key="toggle_stage_filter"):
+        text_col, icon_col = st.columns([9, 1])
+        # 1) First render the header text …
+        text_col.markdown("<span class='header-text'>Stage</span>", unsafe_allow_html=True)
+        # 2) … then the toggle button
+        if icon_col.button("🔽", key="toggle_stage_filter"):
             st.session_state.show_stage_filter = not st.session_state.show_stage_filter
-        tc.markdown("<span class='header-text'>Stage</span>", unsafe_allow_html=True)
 
-    # ─ Last Updated ──────────────────────────────────────────────────────────────
+    # ─── Last Updated Header + Toggle Icon on the RIGHT ───────────────────────────────────
     with header_cols[3]:
-        ic, tc = st.columns([1, 9])
-        if ic.button("🔽", key="toggle_date_sort"):
+        text_col, icon_col = st.columns([9, 1])
+        text_col.markdown("<span class='header-text'>Last Updated</span>", unsafe_allow_html=True)
+        if icon_col.button("🔽", key="toggle_date_sort"):
             st.session_state.show_date_sort = not st.session_state.show_date_sort
-        tc.markdown("<span class='header-text'>Last Updated</span>", unsafe_allow_html=True)
 
     # ─ Delete (blank) ────────────────────────────────────────────────────────────
     header_cols[4].markdown("", unsafe_allow_html=True)
