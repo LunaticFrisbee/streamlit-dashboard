@@ -1,108 +1,291 @@
-leads:
-  - company: Berry Global
+companies:
+  - id: berry_global
+    name: Berry Global
+    description: "Manufacturer of plastic and sustainable packaging solutions."
+    industry: "Packaging"
+    size: 22000
+    city: "Evansville"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/berry-global"
+    keywords: ["eco-friendly", "sustainable", "AI", "sales pipeline"]
+    contact:
+      name: "Sarah Johnson"
+      title: "Sales Director"
+      email: "sarah.johnson@berryglobal.com"
+      phone: "+1-812-555-1234"
+    lead_status:
+      stage: "contacted"
+      visible: true
+      last_updated: "2025-04-15"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 0
+      call_scheduled: 0
     conversations:
       - date: "2025-04-15"
-        message:
+        direction: outbound
+        message: |
           Hi Sarah, I noticed your recent expansion into eco-friendly packaging
           solutions. Our AI platform has helped similar companies optimize their sales
           pipeline. Would you be interested in a brief discussion about your current lead
           generation challenges?
-    stage: Contacted
-    visible: true
-  - company: Sealed Air Corporation
+
+  - id: sealed_air_corporation
+    name: Sealed Air Corporation
+    description: "Global leader in protective packaging solutions."
+    industry: "Packaging"
+    size: 16500
+    city: "Charlotte"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/sealed-air"
+    keywords: ["protective", "manufacturing", "AI", "qualified leads"]
+    contact:
+      name: "Michael Brown"
+      title: "VP Sales"
+      email: "michael.brown@sealedair.com"
+      phone: "+1-980-555-2345"
+    lead_status:
+      stage: "meeting_proposed"
+      visible: true
+      last_updated: "2025-04-16"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 1
+      call_scheduled: 0
     conversations:
       - date: "2025-04-14"
-        message:
+        direction: outbound
+        message: |
           Hello Michael, I came across your company's innovative protective packaging
           solutions. We've helped similar manufacturing companies increase their qualified
           leads by 40%. Would you be open to a quick chat about your sales goals?
       - date: "2025-04-16"
-        message:
+        direction: inbound
+        message: |
           Thanks for your interest! We're currently focusing on companies with
           annual revenue above $100M. Would you like to explore how we could help scale
           your sales process?
-    stage: Meeting Proposed
-    visible: true
-  - company: Sonoco Products
+
+  - id: sonoco_products
+    name: Sonoco Products
+    description: "Producer of sustainable packaging and containers."
+    industry: "Packaging"
+    size: 21000
+    city: "Hartsville"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/sonoco"
+    keywords: ["sustainable", "containers", "AI", "sales cycle"]
+    contact:
+      name: "Jennifer Lee"
+      title: "Head of Marketing"
+      email: "jennifer.lee@sonoco.com"
+      phone: "+1-843-555-3456"
+    lead_status:
+      stage: "contacted"
+      visible: true
+      last_updated: "2025-04-17"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 0
+      call_scheduled: 0
     conversations:
       - date: "2025-04-17"
-        message:
+        direction: outbound
+        message: |
           Hi Jennifer, I saw your company's commitment to sustainable packaging
           solutions. Our AI platform has helped similar companies reduce their sales cycle
           by 20%. Would you be interested in learning more about our approach?
-    stage: Contacted
-    visible: true
-  - company: AptarGroup
+
+  - id: aptargroup
+    name: AptarGroup
+    description: "Provider of dispensing solutions for consumer products."
+    industry: "Manufacturing"
+    size: 5500
+    city: "Crystal Lake"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/aptargroup"
+    keywords: ["dispensing", "consumer goods", "AI", "sales pipeline"]
+    contact:
+      name: "Maria Garcia"
+      title: "Director of Sales"
+      email: "maria.garcia@aptargroup.com"
+      phone: "+1-815-555-4567"
+    lead_status:
+      stage: "meeting_proposed"
+      visible: true
+      last_updated: "2025-05-06"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 1
+      call_scheduled: 1
     conversations:
       - date: "2025-05-05"
-        message:
+        direction: outbound
+        message: |
           Hello Maria, I noticed your company's focus on dispensing solutions.
           Our AI platform has helped similar companies increase their sales pipeline efficiency.
           Would you be interested in a brief discussion?
       - date: "2025-05-06"
-        message:
+        direction: inbound
+        message: |
           Thanks for your interest! I'd love to schedule a demo to show you how
           our platform works. Would next Monday work for you?
-    stage: Meeting Proposed
-    visible: true
-  - company: WestRock Company
+
+  - id: westrock_company
+    name: WestRock Company
+    description: "Integrated paper and packaging solutions provider."
+    industry: "Paper Packaging"
+    size: 45000
+    city: "Atlanta"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/westrock"
+    keywords: ["sustainable", "paper", "AI", "efficiency"]
+    contact:
+      name: "David Smith"
+      title: "Sales Manager"
+      email: "david.smith@westrock.com"
+      phone: "+1-404-555-5678"
+    lead_status:
+      stage: "in_conversation"
+      visible: true
+      last_updated: "2025-04-20"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 1
+      call_scheduled: 0
     conversations:
       - date: "2025-04-18"
-        message:
+        direction: outbound
+        message: |
           Hi David, I noticed your company's impressive growth in sustainable packaging.
           Our AI platform has helped similar companies increase their sales pipeline efficiency
           by 35%. Would you be interested in a brief discussion?
       - date: "2025-04-19"
-        message:
+        direction: inbound
+        message: |
           Thanks for your response! Could you tell me more about your current lead
           generation process?
       - date: "2025-04-20"
-        message:
+        direction: outbound
+        message: |
           That's helpful context. Based on what you've shared, I think we could
           help optimize your outreach strategy. Would you like to see some specific examples
           of how we've helped similar companies?
-    stage: In-conversation
-    visible: true
-  - company: Tetra Pak
+
+  - id: tetra_pak
+    name: Tetra Pak
+    description: "Specialist in food processing and packaging solutions."
+    industry: "Food Packaging"
+    size: 24000
+    city: "Lund"
+    country: "Sweden"
+    linkedin_url: "https://www.linkedin.com/company/tetra-pak"
+    keywords: ["food", "processing", "packaging", "AI"]
+    contact:
+      name: "James Wilson"
+      title: "Business Development Manager"
+      email: "james.wilson@tetrapak.com"
+      phone: "+46-46-555-6789"
+    lead_status:
+      stage: "meeting_proposed"
+      visible: true
+      last_updated: "2025-04-29"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 1
+      call_scheduled: 0
     conversations:
       - date: "2025-04-28"
-        message:
+        direction: outbound
+        message: |
           Hi James, I noticed your company's leadership in food packaging solutions.
           Our AI platform has helped similar companies increase their sales efficiency
           by 45%. Would you be interested in a brief discussion?
       - date: "2025-04-29"
-        message:
+        direction: inbound
+        message: |
           Thanks for your interest! I'd love to show you how our platform could
           help optimize your sales process. Would you be available for a demo next Thursday?
-    stage: Meeting Proposed
-    visible: true
-  - company: Ball Corporation
+
+  - id: ball_corporation
+    name: Ball Corporation
+    description: "Leading manufacturer of metal packaging for beverages."
+    industry: "Metal Packaging"
+    size: 18000
+    city: "Broomfield"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/ball-corporation"
+    keywords: ["metal", "beverages", "AI", "conversion rates"]
+    contact:
+      name: "Lisa Patel"
+      title: "Sales Executive"
+      email: "lisa.patel@ball.com"
+      phone: "+1-303-555-7890"
+    lead_status:
+      stage: "contacted"
+      visible: true
+      last_updated: "2025-04-30"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 0
+      call_scheduled: 0
     conversations:
       - date: "2025-04-30"
-        message:
+        direction: outbound
+        message: |
           Hello Lisa, I came across your company's innovative metal packaging solutions.
           Our AI platform has helped similar companies improve their lead conversion rates.
           Would you be open to a quick chat?
-    stage: Contacted
-    visible: true
-  - company: Crown Holdings
+
+  - id: crown_holdings
+    name: Crown Holdings
+    description: "Global producer of metal packaging and closures."
+    industry: "Metal Packaging"
+    size: 10000
+    city: "Philadelphia"
+    country: "USA"
+    linkedin_url: "https://www.linkedin.com/company/crown-holdings"
+    keywords: ["metal", "closures", "streamline", "sales"]
+    contact:
+      name: "Robert Williams"
+      title: "Head of Business Development"
+      email: "robert.williams@crownholdings.com"
+      phone: "+1-215-555-8901"
+    lead_status:
+      stage: "in_conversation"
+      visible: true
+      last_updated: "2025-05-04"
+      lead_found: 1
+      email_drafted: 1
+      email_sent: 1
+      response_received: 1
+      call_scheduled: 0
     conversations:
       - date: "2025-05-01"
-        message:
+        direction: outbound
+        message: |
           Hi Robert, I noticed your company's impressive portfolio of metal packaging
           solutions. Our AI platform has helped similar companies streamline their sales
           process. Would you be interested in learning more?
       - date: "2025-05-02"
-        message:
+        direction: inbound
+        message: |
           Thanks for your response! Could you tell me more about your current sales
           challenges?
       - date: "2025-05-03"
-        message:
+        direction: outbound
+        message: |
           That's helpful context. I think we could help optimize your outreach
           strategy. Would you like to see some specific examples?
       - date: "2025-05-04"
-        message:
+        direction: inbound
+        message: |
           Great! I'll send over some case studies and we can schedule a follow-up
           call next week.
-    stage: In-conversation
-    visible: true

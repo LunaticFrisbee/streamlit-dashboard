@@ -28,23 +28,22 @@ def load_data():
     if os.path.exists("db.yaml"):
         with open("db.yaml", "r") as file:
             data = yaml.safe_load(file)
-            # Ensure all leads have a visible field and filter invisible ones
-            visible_leads = []
-            for lead in data.get("leads", []):
-                if "visible" not in lead:
-                    lead["visible"] = True
-                if lead.get("visible", True):
-                    visible_leads.append(lead)
-            data["leads"] = visible_leads
-            return data
-    return {"leads": []}
+            # Now we're looking for 'companies' instead of 'leads'
+            visible_companies = []
+            for company in data.get("companies", []):
+                if company.get("lead_status", {}).get("visible", True):
+                    visible_companies.append(company)
+            return {"companies": visible_companies}
+    return {"companies": []}
 
 # Function to save data to YAML file
 def save_data(data):
-    # Ensure all leads have a visible field before saving
-    for lead in data.get("leads", []):
-        if "visible" not in lead:
-            lead["visible"] = True
+    # Ensure all companies have a visible field before saving
+    for company in data.get("companies", []):
+        if "lead_status" not in company:
+            company["lead_status"] = {}
+        if "visible" not in company["lead_status"]:
+            company["lead_status"]["visible"] = True
     with open("db.yaml", "w") as file:
         yaml.dump(data, file)
 
@@ -273,15 +272,12 @@ data = load_data()
 # ─── Build dropdown options ──────────────────────────────────────────────────
 status_options = [
     "All connections",
-    "Draft Ready",
-    "Contacted",
-    "In-conversation",
-    "Lead Identified",
-    "Not fit Lead",
-    "Qualified Lead",
-    "Handed to Human",
-    "Meeting Proposed",
-    "Meeting Booked",
+    "prospecting",
+    "contacted",
+    "meeting_proposed",
+    "in_conversation",
+    "qualified",
+    "closed"
 ]
 
 # ─── HEADER ROW: Title + Icon Button ────────────────────────────────────────
@@ -290,10 +286,11 @@ status_options = [
 # ─── ADD THIS: Sort control ────────────────────────────────────────────────────
 
 # Calculate statistics
-total_leads = len(data["leads"])
-contacted = sum(1 for lead in data["leads"] if lead["stage"] == "Contacted")
-in_conversation = sum(1 for lead in data["leads"] if lead["stage"] == "In-conversation")
-booked_calls = sum(1 for lead in data["leads"] if lead["stage"] in ("Meeting Proposed","Meeting Booked"))
+total_leads = len(data["companies"])
+contacted = sum(1 for company in data["companies"] if company["lead_status"]["stage"] == "contacted")
+in_conversation = sum(1 for company in data["companies"] if company["lead_status"]["stage"] == "in_conversation")
+booked_calls = sum(1 for company in data["companies"] 
+                  if company["lead_status"]["stage"] in ("meeting_proposed", "closed"))
 
 # Display statistics
 st.markdown(f"""
@@ -378,81 +375,65 @@ with table_container:
     # 4a) Stage / status filter
     sel_status = st.session_state.get("status_filter_key", "All connections")
     if sel_status == "All connections":
-        stage_filtered = data["leads"]
+        stage_filtered = data["companies"]
     else:
         stage_filtered = [
-            lead for lead in data["leads"]
-            if lead["stage"] == sel_status
+            company for company in data["companies"]
+            if company["lead_status"]["stage"] == sel_status
         ]
 
     # 4b) Date sorting
     sort_pref = st.session_state.get("date_sort_key", "Latest first")
-    def get_last_date(lead):
-        if not lead["conversations"]:
-            return ""
-        return max(c["date"] for c in lead["conversations"])
+    def get_last_date(company):
+        return company["lead_status"]["last_updated"] if company["lead_status"].get("last_updated") else ""
 
-    leads_sorted = sorted(
+    companies_sorted = sorted(
         stage_filtered,
-        key=lambda ld: get_last_date(ld),
+        key=lambda c: get_last_date(c),
         reverse=(sort_pref == "Latest first")
     )
 
-    # 5) RENDER ROWS using `leads_sorted`
-    for i, lead in enumerate(leads_sorted):
+    # 5) RENDER ROWS using `companies_sorted`
+    for i, company in enumerate(companies_sorted):
         row_cols = st.columns([3, 6, 3, 2, 1])
         # Company name
-        row_cols[0].markdown(f"<span class='header-text'>{lead['company']}</span>", unsafe_allow_html=True)
+        row_cols[0].markdown(f"<span class='header-text'>{company['name']}</span>", unsafe_allow_html=True)
         
         # Conversation Snippet (collapsible)
-        with row_cols[1].expander(lead["conversations"][-1]["message"][:100] + "..." if len(lead["conversations"][-1]["message"]) > 100 else lead["conversations"][-1]["message"], expanded=False):
-            for convo in lead["conversations"]:
+        latest_conversation = company["conversations"][-1] if company["conversations"] else {"message": "No messages"}
+        snippet = latest_conversation["message"][:100] + "..." if len(latest_conversation["message"]) > 100 else latest_conversation["message"]
+        
+        with row_cols[1].expander(snippet, expanded=False):
+            for convo in company["conversations"]:
                 st.markdown(f"""
-                <div class="conversation-expanded" style="border: 1px solid #e0e0e0; margin: 5px 0; padding: 10px; border-radius: 5px;">
+                <div class="conversation-expanded">
                     <p><span class="date-label">Date:</span> <span class="message-content">{convo['date']}</span></p>
                     <p><span class="message-label">Message:</span> <span class="message-content">{convo['message']}</span></p>
                 </div>
                 """, unsafe_allow_html=True)
         
         # Stage with appropriate styling
-        stage_class = ""
-        if lead["stage"] == "Draft Ready":
-            stage_class = "status-draftready"
-        elif lead["stage"] == "Contacted":
-            stage_class = "status-contacted"
-        elif lead["stage"] == "In-conversation":
-            stage_class = "status-inconversation"
-        elif lead["stage"] == "Lead Identified":
-            stage_class = "status-leadidentified"
-        elif lead["stage"] == "Not fit Lead":
-            stage_class = "status-notfit"
-        elif lead["stage"] == "Qualified Lead":
-            stage_class = "status-qualifiedlead"
-        elif lead["stage"] == "Handed to Human":
-            stage_class = "status-handedtohuman"
-        elif lead["stage"] == "Meeting Proposed":
-            stage_class = "status-meetingproposed"
-        elif lead["stage"] == "Meeting Booked":
-            stage_class = "status-meetingbooked"
+        stage = company["lead_status"]["stage"]
+        stage_class = f"status-{stage.replace('_', '').lower()}"
         
         row_cols[2].markdown(f"""
         <div class="stage-indicator {stage_class}">
-            <span class="stage-value">{lead["stage"]}</span>
+            <span class="stage-value">{stage.replace('_', ' ').title()}</span>
         </div>
         """, unsafe_allow_html=True)
         
         # Last Updated date
-        latest_date = max([convo['date'] for convo in lead["conversations"]]) if lead["conversations"] else "No conversations"
+        latest_date = company["lead_status"]["last_updated"]
         row_cols[3].markdown(f"<span class='date-label'>{latest_date}</span>", unsafe_allow_html=True)
         
         # Delete button
-        if row_cols[4].button("Delete", key=f"delete_{lead['company']}"):
-            # Reload the full data to ensure we have all leads
+        if row_cols[4].button("Delete", key=f"delete_{company['id']}"):
+            # Reload the full data to ensure we have all companies
             full_data = yaml.safe_load(open("db.yaml", "r"))
-            # Update the specific lead's visibility
-            for idx, l in enumerate(full_data["leads"]):
-                if l["company"] == lead["company"]:
-                    full_data["leads"][idx]["visible"] = False
+            # Update the specific company's visibility
+            for idx, c in enumerate(full_data["companies"]):
+                if c["id"] == company["id"]:
+                    full_data["companies"][idx]["lead_status"]["visible"] = False
                     break
             # Save the updated data
             with open("db.yaml", "w") as file:
